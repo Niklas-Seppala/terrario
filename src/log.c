@@ -47,7 +47,7 @@ static char *timestr(char *str)
     return str;
 }
 
-void log_any(const TraceLogLevel level, const char *format, ...)
+void log_printf(const TraceLogLevel level, const char *format, ...)
 {
     va_list args;
     va_start(args, format);

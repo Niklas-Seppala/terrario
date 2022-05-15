@@ -23,7 +23,8 @@ LOG_CONF=${LOG_PERSIST} ${LOG_FILE} ${LOG_EXT_TERMINAL}
 
 
 # CONFIGS= -DLOG_FILE -DLOG_PERSIST
-CC_FLAGS=-Wall -Wshadow -std=gnu99 ${DEBUG} ${LOG_CONF}
+CC_WARN=-Wall -Wshadow -Werror -Wextra -Wformat=2 -Wpedantic -fmax-errors=1
+CC_FLAGS=${CC_WARN} -std=gnu99 ${DEBUG} ${LOG_CONF}
 PROJECT_NAME=Terrario
 BUILD=0.0.1
 EXE_NAME=${PROJECT_NAME}-${BUILD}
