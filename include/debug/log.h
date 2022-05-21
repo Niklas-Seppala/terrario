@@ -2,6 +2,7 @@
 #define LOGGER_H
 #include <stdarg.h>
 #include <raylib.h>
+#include "terminal.h"
 
 
 /**

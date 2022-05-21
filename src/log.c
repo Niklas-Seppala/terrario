@@ -6,7 +6,7 @@
 #include <time.h>
 #include <string.h>
 
-#include "terminal.h"
+#include "debug/terminal.h"
 
 static FILE *OUT = NULL;
 
