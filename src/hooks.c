@@ -16,11 +16,11 @@ typedef struct hook_collection {
 static HookArray AT_START;
 static HookArray AT_CLOSE;
 
-static void run(HookArray *storage)
+static void run(HookArray *storage, void* args)
 {
     for (int i = 0; i < storage->count; i++)
     {
-        storage->hooks[i](NULL);
+        storage->hooks[i](args);
     }
 }
 
@@ -80,10 +80,10 @@ void hook_run(GameState state)
     switch (state)
     {
     case GAME_START:
-        run(&AT_START);
+        run(&AT_START, NULL);
         break;
     case GAME_CLOSE:
-        run(&AT_CLOSE);
+        run(&AT_CLOSE, NULL);
         break;
     default:
         break;

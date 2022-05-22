@@ -1,4 +1,3 @@
-COMPLETE_PRINT=\033[1;32mBUILD SUCCESS\033[0m ✅ - \033[1mBinary location: ${OUT_DIR}${TEST_NAME}\033[0m
 
 OBJ_DIR:=../obj/
 OUT_DIR:=../out/
@@ -10,9 +9,8 @@ RAYLIB=-lraylib -lGL -lm -lpthread -ldl -lrt -lX11
 TEST=-lcheck -lm -lpthread -lrt -lsubunit
 
 ##################### DEBUG ####################
-DEBUG=-g -DDEBUG
+#DEBUG=-g -DDEBUG
 ################################################
-
 
 CC_WARN=-Wall -Wshadow -Werror -Wextra -Wformat=2 -Wpedantic -fmax-errors=1
 CC_FLAGS=${CC_WARN} -std=gnu99 ${DEBUG} 
@@ -21,21 +19,24 @@ BUILD=0.0.1
 EXE_NAME=${PROJECT_NAME}-${BUILD}
 TEST_NAME=${EXE_NAME}-tests
 
-
 SRC_FILES=$(shell find ../src -type f -iname '[!main]*.c')
 SRC := $(SRC_FILES:${SRC_DIR}%=%)
 OBJS := $(SRC:%.c=${OBJ_DIR}%.o)
 BINS := $(SRC:%.c=%)
 
+COMPLETE_PRINT=\033[1;32mBUILD SUCCESS\033[0m ✅ - \033[1mBinary location: ${OUT_DIR}${TEST_NAME}\033[0m
+
 suite:
 	@echo ----------------------------------------------------------------------
 	@echo "🎯 \033[1mtest.c\033[0m"
+	${CC} -c ${CC_FLAGS} ${HEADERS} test_hooks.c -o ${OBJ_DIR}test_hooks.o
 	${CC} -c ${CC_FLAGS} ${HEADERS} test.c -o ${OBJ_DIR}test.o
+
 
 build: suite ${BINS} 
 	@echo ----------------------------------------------------------------------
 	@echo "🔗 \033[1;36mLINKING\033[0m"
-	${CC} ${OBJS} ${OBJ_DIR}test.o ${RAYLIB} ${TEST} -o ${OUT_DIR}${TEST_NAME}
+	${CC} ${OBJS} ${OBJ_DIR}test.o ${OBJ_DIR}test_hooks.o ${RAYLIB} ${TEST} -o ${OUT_DIR}${TEST_NAME}
 	@echo ----------------------------------------------------------------------
 	@echo "$(COMPLETE_PRINT)"
 	@echo ----------------------------------------------------------------------
