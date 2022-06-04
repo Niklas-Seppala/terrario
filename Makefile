@@ -1,4 +1,5 @@
-COMPLETE_PRINT=\033[1;32mSuccess\033[0m ✅ - \033[1mBinary created: ${OUT_DIR}${EXE_NAME}\033[0m
+COMPLETE_PRINT=\033[1;32mSuccess\033[0m ✅ -\
+ \033[1mBinary created: ${OUT_DIR}${EXE_NAME}\033[0m
 
 OBJ_DIR:=./obj/
 OUT_DIR:=./out/
@@ -20,9 +21,9 @@ LOG_PERSIST=-DLOG_PERSIST
 LOG_CONF=${LOG_PERSIST} ${LOG_FILE} ${LOG_EXT_TERMINAL}
 ################################################
 
-
+RT_NULL_CHECKS = -DRT_NULL_CHECKS -DRT_NULL_KILLS
 CC_WARN=-Wall -Wshadow -Werror -Wextra -Wformat=2 -Wpedantic -fmax-errors=1
-CC_FLAGS=${CC_WARN} -std=c99 ${DEBUG} ${LOG_CONF}
+CC_FLAGS=${CC_WARN} -std=c99 ${DEBUG} ${RT_NULL_CHECKS} ${LOG_CONF}
 PROJECT_NAME=Terrario
 BUILD=0.0.1
 EXE_NAME=${PROJECT_NAME}-${BUILD}
@@ -50,8 +51,10 @@ build: ${BINS}
 
 %: %.o
 	
-run:
+
+run: build
 	@${OUT_DIR}${EXE_NAME} ${RUN_ARGS}
+
 
 clean:
 	@rm $(OBJ_DIR)* $(OUT_DIR)* *.o 2>/dev/null || true

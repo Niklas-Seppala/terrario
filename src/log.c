@@ -8,8 +8,6 @@
 
 #include "debug/terminal.h"
 
-static FILE *OUT = NULL;
-
 #define TIME_STR_LEN (72)
 #define MILLIS_STR_LEN 8
 
@@ -30,6 +28,25 @@ static FILE *OUT = NULL;
     #define COLORS 1
 #endif
 
+#if COLORS
+    #define INFO  TERM_GRN"INFO"COLOR_RESET
+    #define TRACE TERM_CYNHB"TRACE"COLOR_RESET
+    #define WARN  TERM_YEL"WARN"COLOR_RESET
+    #define DEBG  TERM_MAG"DEBUG"COLOR_RESET
+    #define ERROR TERM_RED"ERROR"COLOR_RESET
+    #define FATAL TERM_REDHB"FATAL"COLOR_RESET
+#else
+    #define INFO "INFO"
+    #define TRACE "TRACE"
+    #define WARN  "WARN"
+    #define DEBG  "DEBUG"
+    #define ERROR "ERROR"
+    #define FATAL "FATAL"
+#endif
+
+
+static FILE *OUT = NULL;
+
 static char *timestr(char *str)
 {
     // Date and time of day
@@ -49,61 +66,24 @@ static char *timestr(char *str)
 
 void log_printf(const TraceLogLevel level, const char *format, ...)
 {
+    if (OUT == NULL) 
+    {
+        fprintf(stderr, "LOGGER IS NOT INITIALIZED!\n");
+        return;
+    }
+
     va_list args;
     va_start(args, format);
 
     switch (level)
     {
-        case LOG_INFO:
-        #if COLORS
-            fprintf(OUT, "["INFO"]  ");
-        #else
-            fprintf(OUT, "[INFO]  ");
-        #endif
-            break;
-        
-        case LOG_TRACE:
-        #if COLORS
-            fprintf(OUT, "["TRACE"] ");
-        #else
-            fprintf(OUT, "[TRACE] ");
-        #endif
-            break;
-
-        case LOG_WARNING: 
-        #if COLORS
-            fprintf(OUT, "["WARN"]  ");
-        #else
-            fprintf(OUT, "[WARN]  ");
-        #endif
-            break;
-
-        case LOG_DEBUG: 
-        #if COLORS
-            fprintf(OUT, "["DEBG"] ");
-        #else
-            fprintf(OUT, "[DEBUG] ");
-        #endif
-            break;
-        
-        case LOG_ERROR: 
-        #if COLORS
-            fprintf(OUT, "["ERROR"] ");
-        #else
-            fprintf(OUT, "[ERROR] ");
-        #endif
-            break;
-
-        case LOG_FATAL: 
-        #if COLORS
-            fprintf(OUT, "["FATAL"] ");
-        #else
-            fprintf(OUT, "[FATAL] ");
-        #endif
-            break;
-
-        default: 
-            break;
+        case LOG_INFO:    fprintf(OUT, "["INFO"]  "); break;
+        case LOG_TRACE:   fprintf(OUT, "["TRACE"] "); break;
+        case LOG_WARNING: fprintf(OUT, "["WARN"]  "); break;
+        case LOG_DEBUG:   fprintf(OUT, "["DEBG"] ");  break;
+        case LOG_ERROR:   fprintf(OUT, "["ERROR"] "); break;
+        case LOG_FATAL:   fprintf(OUT, "["FATAL"] "); break;
+        default:                                      break;
     }
 
     // Time
@@ -119,7 +99,7 @@ void log_printf(const TraceLogLevel level, const char *format, ...)
     vfprintf(OUT, format, args);
     fprintf(OUT, "\n");
 
-#ifdef DEBUG
+#ifdef LOG_FILE
     fflush(OUT);
 #endif
 

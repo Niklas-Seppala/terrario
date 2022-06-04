@@ -36,7 +36,7 @@ START_TEST(test_hook_is_called_when_state_runs)
     hook_into(GAME_START, boolean_flippin_hook);
 
     // Hook should flip state.
-    hook_run(GAME_START);
+    hook_run_all_at(GAME_START);
     ck_assert(boolean_state);
 
     // Reset state;
@@ -50,7 +50,7 @@ START_TEST(test_hooks_are_called_when_state_runs)
     hook_into(GAME_START, boolean_flippin_hook);
 
     // Hook should flip state, and second flip it back.
-    hook_run(GAME_START);
+    hook_run_all_at(GAME_START);
     ck_assert(!boolean_state);
 
     // Reset state;

@@ -1,5 +1,15 @@
+/**
+ * @file log.h
+ * @copyright Copyright (c) 2022
+ * @date 2022-06-04
+ * @author Niklas Seppälä
+ * 
+ * @brief 
+ */
+
 #if !defined(TERMINAL_H)
 #define TERMINAL_H
+#include "debug/log.h"
 
 #define TERM_BLK "\033[0;30m"
 #define TERM_RED "\033[0;31m"
@@ -12,12 +22,5 @@
 #define TERM_CYNHB "\033[0;106m"
 #define TERM_WHT "\033[0;37m"
 #define COLOR_RESET "\033[0m"
-
-#define INFO  TERM_GRN"INFO"COLOR_RESET
-#define TRACE TERM_CYNHB"TRACE"COLOR_RESET
-#define WARN  TERM_YEL"WARN"COLOR_RESET
-#define DEBG  TERM_MAG"DEBUG"COLOR_RESET
-#define ERROR TERM_RED"ERROR"COLOR_RESET
-#define FATAL TERM_REDHB"FATAL"COLOR_RESET
 
 #endif // TERMINAL_H

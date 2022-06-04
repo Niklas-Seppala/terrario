@@ -1,8 +1,7 @@
 #if !defined(TERRARIO_H)
 #define TERRARIO_H
 
-#define STRINGIFY(x) STRINGIFY_(x)
-#define STRINGIFY_(x) #x
+// ---------------- PROJECT OPTIONS --------------- 
 
 #ifndef GAME_NAME
     #define GAME_NAME "Terrario"
@@ -16,6 +15,22 @@
     #define SCREEN_START_WIDTH 650
     #define SCREEN_START_HEIGHT 650
 #endif
+
+
+// Empty macro implementation.
+#define UNDEFINED_MACRO
+
+// Stringify variable
+#define STRINGIFY(x) STRINGIFY_(x)
+#define STRINGIFY_(x) #x
+
+/**
+ * @brief Basic return codes for this project.
+ */
+typedef enum return_code {
+    TER_ERROR = 0,      // Function error
+    TER_SUCCESS = 1     // Function success
+} TER_RC;
 
 
 #endif // TERRARIO_H

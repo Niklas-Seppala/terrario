@@ -3,7 +3,7 @@
 #include "debug/log.h"
 #include "terrario/error.h"
 
-#define HOOK_CAPACITY 256
+#define HOOK_CAPACITY 128
 
 typedef struct hook_collection {
     GameState type;
@@ -18,13 +18,15 @@ static HookArray AT_CLOSE;
 
 static void run(HookArray *storage, void* args)
 {
+    NOT_NULL(storage);
     for (int i = 0; i < storage->count; i++)
     {
+        NOT_NULL(storage->hooks);
         storage->hooks[i](args);
     }
 }
 
-static RC try_store_hook(HookArray *storage, GameHook hook) 
+static TER_RC try_store_hook(HookArray *storage, GameHook hook) 
 {
     // Allocate space for hooks.
     if (storage->hooks == NULL) 
@@ -36,8 +38,8 @@ static RC try_store_hook(HookArray *storage, GameHook hook)
     // Store if got space.
     if (storage->next_empty == NULL) 
     {
-        PRINTF_ERROR("%s", __func__, __FILE__, __LINE__, "Hook array is full.");
-        return TERRARIO_ERROR;
+        PRINTF_ERROR("%s", "Hook array is full.");
+        return TER_ERROR;
     }
     *storage->next_empty = hook;
     storage->count++;
@@ -46,18 +48,18 @@ static RC try_store_hook(HookArray *storage, GameHook hook)
     if (storage->count == HOOK_CAPACITY)
     {
         log_printf(LOG_WARNING, "Hook array at max capacity!");
-        return TERRARIO_SUCCESS;
+        return TER_SUCCESS;
     }
 
     // Move to next slot next slot.
     storage->next_empty++;
 
-    return TERRARIO_SUCCESS;
+    return TER_SUCCESS;
 }
 
-RC hook_into(GameState state, GameHook hook)
+TER_RC hook_into(GameState state, GameHook hook)
 {
-    RC status;
+    TER_RC status;
     switch (state)
     {
     case GAME_START:
@@ -67,15 +69,14 @@ RC hook_into(GameState state, GameHook hook)
         status = try_store_hook(&AT_CLOSE, hook);
         break;
     default:
-        PRINTF_ERROR("%s 0x%x", __func__, __FILE__, __LINE__, "Unknown game state when " \
-                                                              "registering hook:", state);
-        status = TERRARIO_ERROR;
+        PRINTF_ERROR("%s 0x%x", "Unknown game state when registering hook:", state);
+        status = TER_ERROR;
         break;
     }
     return status;
 }
 
-void hook_run(GameState state) 
+void hook_run_all_at(GameState state) 
 {
     switch (state)
     {
@@ -96,6 +97,6 @@ int hook_active_count(GameState state)
     {
     case GAME_START: return AT_START.count;
     case GAME_CLOSE: return AT_CLOSE.count;
-    default:         return -1;
+    default:         return INVALID_COUNT;
     }
 }

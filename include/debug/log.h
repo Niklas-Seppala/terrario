@@ -1,8 +1,20 @@
+/**
+ * @file log.h
+ * @copyright Copyright (c) 2022
+ * @date 2022-06-04
+ * @author Niklas Seppälä
+ * 
+ * @brief 
+ */
+
 #if !defined(LOGGER_H)
 #define LOGGER_H
 #include <stdarg.h>
 #include <raylib.h>
+
 #include "terminal.h"
+#include "terrario.h"
+#include "terrario/error.h"
 
 
 /**
@@ -15,8 +27,6 @@
  */
 void log_printf(const TraceLogLevel level, const char *format, ...);
 
-#define UNDEFINED
-
 #ifdef DEBUG
     #define PRINTF_TRACE(format, ...) \
         log_printf(LOG_TRACE, format, __VA_ARGS__)
@@ -24,8 +34,8 @@ void log_printf(const TraceLogLevel level, const char *format, ...);
     #define PRINTF_DEBUG(format, ...) \
         log_printf(LOG_DEBUG, format, __VA_ARGS__)
 #else
-    #define PRINTF_TRACE(format, ...) UNDEFINED
-    #define PRINTF_DEBUG(format, ...) UNDEFINED
+    #define PRINTF_TRACE(format, ...) UNDEFINED_MACRO
+    #define PRINTF_DEBUG(format, ...) UNDEFINED_MACRO
 #endif
 
 /**
