@@ -4,12 +4,12 @@
  * @date 2022-06-04
  * @author Niklas Seppälä
  * 
- * @brief 
+ * @brief ANSI terminal color definitions.
  */
 
-#if !defined(TERMINAL_H)
-#define TERMINAL_H
-#include "debug/log.h"
+
+#if !defined(GUARD_TERMINAL_H)
+#define GUARD_TERMINAL_H
 
 #define TERM_BLK "\033[0;30m"
 #define TERM_RED "\033[0;31m"
@@ -23,4 +23,4 @@
 #define TERM_WHT "\033[0;37m"
 #define COLOR_RESET "\033[0m"
 
-#endif // TERMINAL_H
+#endif // GUARD_TERMINAL_H

@@ -1,67 +1,89 @@
 /**
- * @file log.h
+ * @file hooks.h
  * @copyright Copyright (c) 2022
  * @date 2022-06-04
  * @author Niklas Seppälä
  * 
- * @brief 
+ * @brief Provides API to hook into game's states. Hooks
+ *        registered to each game state are called in registration
+ *        order. Hook it self is just a a function 
+ *        pointer of TR_GameHook type.
+ * 
+ *        Hooks receive void pointer as an argument, and the contents
+ *        of that dependends on game state.
+ *              TODO: List game state arguments here.
  */
 
-#if !defined(HOOKS_H)
-#define HOOKS_H
+
+#if !defined(GUARD_HOOKS_H)
+#define GUARD_HOOKS_H
 #include "terrario.h"
 #include "terrario/error.h"
 
 
-// NOTE: Trying to work with single hook function
-// prototype. If this does not work for some reason
-// fall back to original idea of various hooks for
-// different game states.
-/**
- * @brief 
- * 
- */
-typedef void (*GameHook)(void*);
+#ifndef HOOK_CG
+    #define HOOK_CAPACITY_GROWTH  2
+#else
+    #define HOOK_CAPACITY_GROWTH  HOOK_CG
+#endif
+
+#ifndef HOOKS_SC
+    #define HOOK_START_CAPACITY 64
+#else
+    #define HOOK_START_CAPACITY HOOKS_SC
+#endif
 
 /**
- * @brief asdasd
+ * @brief Hook function pointer type. Hooks should return
+ *        void, and they receive void pointer as an argument,
+ *        which depends on registered game state.
+ * 
+ */
+typedef void (*TR_GameHook)(void*);
+
+/**
+ * @brief Game states where hooks are allowed. Can act as
+ *        flags and be combined.
  * 
  */
 typedef enum GAME_STATE {
-    GAME_START = 0x1, // NOTE: Increment in power of two -> combined flags.
-    GAME_CLOSE = 0x2
-    // NOTE: Separate enumerations for rendering mayhaps.
-    // NOTE:          --||--       for adding GameObjects and so on.
-} GameState;
+    TR_GAME_STATE_START  = 0x1, // NOTE: Increment in power of two -> combined flags.
+    TR_GAME_STATE_CLOSE  = 0x2,
+    // TODO: Separate enumerations for rendering mayhaps.
+    //                --||--       for adding GameObjects and so on.
+} TR_GameState;
 
 /**
- * @brief 
+ * @brief Attaches hook into specified game state. Hook function
+ *        gets called when all hooks are ran for the game state.
  * 
- */
-void hooks_init(void);
-
-/**
- * @brief 
- * 
- * @param state 
- * @param hook 
+ * @param state Game state where hooks are allowed.
+ * @param hook Hook function pointer.
  * @return TER_RC 
  */
-TER_RC hook_into(GameState state, GameHook hook);
+void hook_into(TR_GameState state, TR_GameHook hook);
 
 /**
- * @brief 
+ * @brief Runs all hooks registered to specified game state.
  * 
- * @param state 
+ * @param state Game state where hooks are allowed.
  */
-void hook_run_all_at(GameState state);
+void hook_run_all_at(TR_GameState state);
 
 /**
- * @brief 
+ * @brief Get the current active hook count for specified game state.
  * 
- * @param state 
- * @return int 
+ * @param state Game state where hooks are allowed.
+ * @return int Current number of hooks at specified game state.
  */
-int hook_active_count(GameState state);
+int hook_active_count_at(TR_GameState state);
 
-#endif // HOOKS_H
+/**
+ * @brief Clears all hooks from specified game state.
+ * 
+ * @param state Game state where hooks are allowed.
+ * @return int Current number of hooks at specified game state.
+ */
+int hook_clear_from(TR_GameState state);
+
+#endif // GUARD_HOOKS_H

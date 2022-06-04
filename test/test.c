@@ -1,6 +1,9 @@
 #include "test.h"
 #include "test_hooks.h"
+#include "../include/debug/log.h"
 
+#define SUCCESS_DIVIDER TERM_GRN "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n" COLOR_RESET
+#define FAILURE_DIVIDER TERM_RED "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n" COLOR_RESET
 
 Suite *test_add_case(Suite *suite, TestCase tc)
 {
@@ -12,6 +15,7 @@ Suite *test_add_case(Suite *suite, TestCase tc)
 
 int main(void)
 {
+    log_setup();
     int fail_count = 0;
     int total_count = 0;
 
@@ -26,11 +30,20 @@ int main(void)
     fail_count = srunner_ntests_failed(runner);
     total_count = srunner_ntests_run(runner);
     srunner_free(runner);
-    
-    printf("----------------------------------------------------------------------\n");
-    char *icon = fail_count == 0 ? "✅" : "❌";
-    printf("%s  FAILED: %d   TOTAL: %d  \n", icon, fail_count, total_count);
-    printf("----------------------------------------------------------------------\n");
 
+    const int success = fail_count == 0;
+    char *icon = success ? "👌" : "👎";
+    const char *DIVIDER = success ? SUCCESS_DIVIDER : FAILURE_DIVIDER;
+
+    printf("\n%s", DIVIDER);
+    printf("    %s %.1f%%    🧪 TOTAL RUN: %d    ✅ PASSED: %d    ❌ FAILED: %d\n",
+           icon,
+           (double)total_count / (double)(total_count - fail_count) * 100.0,
+           total_count, 
+           total_count - fail_count, fail_count);
+    
+    printf("%s", DIVIDER);
+
+    log_teardown();
     return (fail_count == 0) ? EXIT_SUCCESS : EXIT_FAILURE;  
 }

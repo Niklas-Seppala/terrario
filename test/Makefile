@@ -9,11 +9,15 @@ RAYLIB=-lraylib -lGL -lm -lpthread -ldl -lrt -lX11
 TEST=-lcheck -lm -lpthread -lrt -lsubunit
 
 ##################### DEBUG ####################
-#DEBUG=-g -DDEBUG
+DEBUG=-g -DDEBUG
+################################################
+
+##################### TEST ####################
+TEST_CONFIGS=-DHOOKS_SC=2 -DHOOKS_CG=2
 ################################################
 
 CC_WARN=-Wall -Wshadow -Werror -Wextra -Wformat=2 -Wpedantic -fmax-errors=1
-CC_FLAGS=${CC_WARN} -std=gnu99 ${DEBUG} 
+CC_FLAGS=${CC_WARN} -std=gnu99 ${DEBUG} ${TEST_CONFIGS}
 PROJECT_NAME=Terrario
 BUILD=0.0.1
 EXE_NAME=${PROJECT_NAME}-${BUILD}

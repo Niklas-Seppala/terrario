@@ -15,7 +15,7 @@ int main(void)
     InitWindow(SCREEN_START_WIDTH, SCREEN_START_HEIGHT, GAME_NAME);
     SetTargetFPS(TARGET_FPS);
 
-    hook_run_all_at(GAME_START);
+    hook_run_all_at(TR_GAME_STATE_START);
     while (!WindowShouldClose())
     {
         BeginDrawing();
@@ -23,6 +23,7 @@ int main(void)
         EndDrawing();
     }
     CloseWindow();
+    hook_run_all_at(TR_GAME_STATE_CLOSE);
 
     log_teardown();
 

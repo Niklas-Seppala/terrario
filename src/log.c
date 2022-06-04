@@ -7,6 +7,7 @@
 #include <string.h>
 
 #include "debug/terminal.h"
+#include "debug/log.h"
 
 #define TIME_STR_LEN (72)
 #define MILLIS_STR_LEN 8
@@ -29,19 +30,21 @@
 #endif
 
 #if COLORS
-    #define INFO  TERM_GRN"INFO"COLOR_RESET
-    #define TRACE TERM_CYNHB"TRACE"COLOR_RESET
-    #define WARN  TERM_YEL"WARN"COLOR_RESET
-    #define DEBG  TERM_MAG"DEBUG"COLOR_RESET
-    #define ERROR TERM_RED"ERROR"COLOR_RESET
-    #define FATAL TERM_REDHB"FATAL"COLOR_RESET
+    #define PRETTY_INFO  TERM_GRN"INFO"COLOR_RESET
+    #define PRETTY_TRACE TERM_CYNHB"TRACE"COLOR_RESET
+    #define PRETTY_WARN  TERM_YEL"WARN"COLOR_RESET
+    #define PRETTY_DEBUG  TERM_MAG"DEBUG"COLOR_RESET
+    #define PRETTY_ERROR TERM_RED"ERROR"COLOR_RESET
+    #define PRETTY_FATAL TERM_REDHB"FATAL"COLOR_RESET
+    #define PRETTY_TEST  TERM_YEL"TEST"COLOR_RESET
 #else
-    #define INFO "INFO"
-    #define TRACE "TRACE"
-    #define WARN  "WARN"
-    #define DEBG  "DEBUG"
-    #define ERROR "ERROR"
-    #define FATAL "FATAL"
+    #define PRETTY_INFO  "INFO"
+    #define PRETTY_TRACE "TRACE"
+    #define PRETTY_WARN  "WARN"
+    #define PRETTY_DEBG  "DEBUG"
+    #define PRETTY_ERROR "ERROR"
+    #define PRETTY_FATAL "FATAL"
+    #define PRETTY_TEST  "TEST"
 #endif
 
 
@@ -64,7 +67,7 @@ static char *timestr(char *str)
     return str;
 }
 
-void log_printf(const TraceLogLevel level, const char *format, ...)
+void log_printf(const TR_LogLevel level, const char *format, ...)
 {
     if (OUT == NULL) 
     {
@@ -77,13 +80,14 @@ void log_printf(const TraceLogLevel level, const char *format, ...)
 
     switch (level)
     {
-        case LOG_INFO:    fprintf(OUT, "["INFO"]  "); break;
-        case LOG_TRACE:   fprintf(OUT, "["TRACE"] "); break;
-        case LOG_WARNING: fprintf(OUT, "["WARN"]  "); break;
-        case LOG_DEBUG:   fprintf(OUT, "["DEBG"] ");  break;
-        case LOG_ERROR:   fprintf(OUT, "["ERROR"] "); break;
-        case LOG_FATAL:   fprintf(OUT, "["FATAL"] "); break;
-        default:                                      break;
+        case TR_LOG_INFO:    fprintf(OUT, "["PRETTY_INFO"]  "); break;
+        case TR_LOG_TRACE:   fprintf(OUT, "["PRETTY_TRACE"] "); break;
+        case TR_LOG_WARNING: fprintf(OUT, "["PRETTY_WARN"]  "); break;
+        case TR_LOG_DEBUG:   fprintf(OUT, "["PRETTY_DEBUG"] "); break;
+        case TR_LOG_ERROR:   fprintf(OUT, "["PRETTY_ERROR"] "); break;
+        case TR_LOG_FATAL:   fprintf(OUT, "["PRETTY_FATAL"] "); break;
+        case TR_LOG_TEST:    fprintf(OUT, "["PRETTY_TEST"]  "); break;
+        default:                                                break;
     }
 
     // Time

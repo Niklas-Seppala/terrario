@@ -1,102 +1,117 @@
-#include "terrario/hooks.h"
 #include <stdlib.h>
+
 #include "debug/log.h"
+#include "terrario/hooks.h"
 #include "terrario/error.h"
 
-#define HOOK_CAPACITY 128
 
 typedef struct hook_collection {
-    GameState type;
-    GameHook *hooks;
-    GameHook *next_empty;
+    TR_GameState type;
+    TR_GameHook *hooks;
     int count;
-} HookArray;
+    int size_limit;
+} TR_HookCollection;
 
 
-static HookArray AT_START;
-static HookArray AT_CLOSE;
+static TR_HookCollection HOOKS_AT_START;
+static TR_HookCollection HOOKS_AT_CLOSE;
 
-static void run(HookArray *storage, void* args)
+static void run(TR_HookCollection *state_hooks, void* args)
 {
-    NOT_NULL(storage);
-    for (int i = 0; i < storage->count; i++)
+    NOT_NULL(state_hooks);
+    for (int i = 0; i < state_hooks->count; i++)
     {
-        NOT_NULL(storage->hooks);
-        storage->hooks[i](args);
+        NOT_NULL(state_hooks->hooks);
+        state_hooks->hooks[i](args);
     }
 }
 
-static TER_RC try_store_hook(HookArray *storage, GameHook hook) 
+static void store_hook(TR_HookCollection *state_hooks, TR_GameHook hook) 
 {
-    // Allocate space for hooks.
-    if (storage->hooks == NULL) 
+    // Allocate space for hooks, if not yet done.
+    if (state_hooks->hooks == NULL) 
     {
-        storage->hooks = calloc(HOOK_CAPACITY, sizeof(GameHook));
-        storage->next_empty = storage->hooks;
+        state_hooks->hooks = calloc(HOOK_START_CAPACITY, sizeof(TR_GameHook));
+        state_hooks->size_limit = HOOK_START_CAPACITY;
     }
 
-    // Store if got space.
-    if (storage->next_empty == NULL) 
+    // Make sure we got enough space.
+    if (state_hooks->count >= state_hooks->size_limit)
     {
-        PRINTF_ERROR("%s", "Hook array is full.");
-        return TER_ERROR;
-    }
-    *storage->next_empty = hook;
-    storage->count++;
-    
-    // Check capacity, if full return;
-    if (storage->count == HOOK_CAPACITY)
-    {
-        log_printf(LOG_WARNING, "Hook array at max capacity!");
-        return TER_SUCCESS;
-    }
+        PRINTF_DEBUG("Hooks for state: 0x%x are at current max capacity: %d",
+                     state_hooks->type, state_hooks->size_limit);
 
-    // Move to next slot next slot.
-    storage->next_empty++;
+        state_hooks->size_limit *= HOOK_CAPACITY_GROWTH;
+        state_hooks->hooks = realloc(state_hooks->hooks,
+                                     state_hooks->size_limit * sizeof(TR_GameHook));
 
-    return TER_SUCCESS;
+        PRINTF_DEBUG("New hook capacity for state 0x%x: %d", state_hooks->type,
+                      state_hooks->size_limit);
+    }
+    // Store hook.
+    state_hooks->hooks[state_hooks->count++] = hook;
 }
 
-TER_RC hook_into(GameState state, GameHook hook)
+static int unstore_hooks(TR_HookCollection *state_hooks)
 {
-    TER_RC status;
+    return state_hooks->count = 0;
+}
+
+
+
+void hook_into(TR_GameState state, TR_GameHook hook)
+{
+    int valid_state_provided = 0;
+    if (state & TR_GAME_STATE_START)
+    {
+        store_hook(&HOOKS_AT_START, hook);
+        valid_state_provided = 1;
+    }
+    if (state & TR_GAME_STATE_CLOSE)
+    {
+        store_hook(&HOOKS_AT_CLOSE, hook);
+        valid_state_provided = 1;
+    }
+
+    if (!valid_state_provided) 
+    {
+        PRINTF_ERROR("Unknown game state when registering hook: 0x%x", state);
+    }
+}
+
+void hook_run_all_at(TR_GameState state) 
+{
     switch (state)
     {
-    case GAME_START:
-        status = try_store_hook(&AT_START, hook);
-        break;
-    case GAME_CLOSE:
-        status = try_store_hook(&AT_CLOSE, hook);
-        break;
+    case TR_GAME_STATE_START: run(&HOOKS_AT_START, NULL); break;
+    case TR_GAME_STATE_CLOSE: run(&HOOKS_AT_CLOSE, NULL); break;
     default:
-        PRINTF_ERROR("%s 0x%x", "Unknown game state when registering hook:", state);
-        status = TER_ERROR;
+        PRINTF_ERROR("Unknown game state when running hooks for state: 0x%x", state);
         break;
     }
-    return status;
 }
 
-void hook_run_all_at(GameState state) 
+int hook_active_count_at(TR_GameState state)
 {
     switch (state)
     {
-    case GAME_START:
-        run(&AT_START, NULL);
-        break;
-    case GAME_CLOSE:
-        run(&AT_CLOSE, NULL);
-        break;
+    case TR_GAME_STATE_START: return HOOKS_AT_START.count;
+    case TR_GAME_STATE_CLOSE: return HOOKS_AT_CLOSE.count;
     default:
-        break;
+        PRINTF_ERROR("Unknown game state when querying hook count: 0x%x",
+                     state);
+        return INVALID_COUNT;
     }
 }
 
-int hook_active_count(GameState state)
+int hook_clear_from(TR_GameState state) 
 {
     switch (state)
     {
-    case GAME_START: return AT_START.count;
-    case GAME_CLOSE: return AT_CLOSE.count;
-    default:         return INVALID_COUNT;
+    case TR_GAME_STATE_START: return unstore_hooks(&HOOKS_AT_START);
+    case TR_GAME_STATE_CLOSE: return unstore_hooks(&HOOKS_AT_CLOSE);
+    default:
+        PRINTF_ERROR("Unknown game state when clearing hooks: 0x%x", state);
+        return 0;
     }
 }

@@ -1,8 +1,17 @@
-#if !defined(TERRARIO_H)
-#define TERRARIO_H
+/**
+ * @file terrario.h
+ * @copyright Copyright (c) 2022
+ * @date 2022-06-04
+ * @author Niklas Seppälä
+ * 
+ * @brief General project wide definitions.
+ */
+
+
+#if !defined(GUARD_TERRARIO_H)
+#define GUARD_TERRARIO_H
 
 // ---------------- PROJECT OPTIONS --------------- 
-
 #ifndef GAME_NAME
     #define GAME_NAME "Terrario"
 #endif
@@ -15,6 +24,7 @@
     #define SCREEN_START_WIDTH 650
     #define SCREEN_START_HEIGHT 650
 #endif
+// ------------------------------------------------ 
 
 
 // Empty macro implementation.
@@ -33,4 +43,4 @@ typedef enum return_code {
 } TER_RC;
 
 
-#endif // TERRARIO_H
+#endif // GUARD_TERRARIO_H
