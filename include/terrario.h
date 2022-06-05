@@ -7,6 +7,7 @@
  * @brief General project wide definitions.
  */
 
+#include <raylib.h>
 
 #if !defined(GUARD_TERRARIO_H)
 #define GUARD_TERRARIO_H
@@ -27,6 +28,17 @@
 // ------------------------------------------------ 
 
 
+// ---------------- GAME KEYBINDINGS --------------
+#define TR_KEY_JUMP            KEY_SPACE
+#define TR_KEY_MOVE_UP         KEY_W
+#define TR_KEY_MOVE_DOWN       KEY_S
+#define TR_KEY_MOVE_LEFT       KEY_A
+#define TR_KEY_MOVE_RIGHT      KEY_D
+
+#define TR_KEY_MOUSE_ACTION_1  MOUSE_BUTTON_LEFT
+#define TR_KEY_MOUSE_ACTION_2  MOUSE_BUTTON_RIGHT
+// ------------------------------------------------
+
 // Empty macro implementation.
 #define UNDEFINED_MACRO
 
@@ -38,9 +50,17 @@
  * @brief Basic return codes for this project.
  */
 typedef enum return_code {
-    TER_ERROR = 0,      // Function error
-    TER_SUCCESS = 1     // Function success
-} TER_RC;
+    TR_ERROR = 0,      // Function error
+    TR_SUCCESS = 1     // Function success
+} TR_RC;
 
+
+typedef enum directions {
+    TR_NO_DIRECTION = 0x0,
+    TR_UP           = 0x1,
+    TR_RIGHT        = 0x2,
+    TR_DOWN         = 0x4,
+    TR_LEFT         = 0x8
+} TR_DIR;
 
 #endif // GUARD_TERRARIO_H

@@ -59,7 +59,7 @@ typedef enum GAME_STATE {
  * 
  * @param state Game state where hooks are allowed.
  * @param hook Hook function pointer.
- * @return TER_RC 
+ * @return TR_RC 
  */
 void hook_into(TR_GameState state, TR_GameHook hook);
 

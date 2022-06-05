@@ -7,6 +7,7 @@
 
 #include "terrario.h"
 #include "terrario/hooks.h"
+#include "terrario/input.h"
 
 int main(void)
 {
