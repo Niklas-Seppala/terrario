@@ -1,5 +1,4 @@
-COMPLETE_PRINT=\033[1;32mSuccess\033[0m ✅ -\
- \033[1mBinary created: ${OUT_DIR}${EXE_NAME}\033[0m
+COMPLETE_PRINT=\033[1;32mSuccess\033[0m:\033[1m ${OUT_DIR}${EXE_NAME}\033[0m
 
 OBJ_DIR:=./obj/
 OUT_DIR:=./out/
@@ -12,18 +11,17 @@ RAYLIB=-lraylib -lGL -lm -lpthread -ldl -lrt -lX11
 DEBUG=-g -DDEBUG
 ################################################
 
-
 #################### LOGGING ###################
 #LOG_FILE=-DLOG_FILE
-LOG_PERSIST=-DLOG_PERSIST
+#LOG_PERSIST=-DLOG_PERSIST
 #LOG_EXT_TERMINAL=-DLOG_EXT_TERMINAL
 
 LOG_CONF=${LOG_PERSIST} ${LOG_FILE} ${LOG_EXT_TERMINAL}
 ################################################
 
 RT_NULL_CHECKS = -DRT_NULL_CHECKS -DRT_NULL_KILLS
-CC_WARN=-Wall -Wshadow -Werror -Wextra -Wformat=2 -Wpedantic -fmax-errors=1
-CC_FLAGS=${CC_WARN} -std=c99 ${DEBUG} ${RT_NULL_CHECKS} ${LOG_CONF}
+CC_WARN=-Wall -Wshadow -Werror -Wextra -Wformat=2 -Wpedantic -fmax-errors=2 -Wno-unknown-pragmas
+CC_FLAGS=${CC_WARN} -O0 -std=c99 ${DEBUG} ${RT_NULL_CHECKS} ${LOG_CONF}
 PROJECT_NAME=Terrario
 BUILD=0.0.1
 EXE_NAME=${PROJECT_NAME}-${BUILD}
@@ -45,9 +43,7 @@ build: ${BINS}
 	@echo "\n"
 
 %.o: ${SRC_DIR}%.c
-	@echo ----------------------------------------------------------------------
-	@echo "🎯 \033[1m$<\033[0m"
-	${CC} ${CC_FLAGS} ${CONFIG_FLAGS} -Iinclude -c $< -o $@
+	${CC} -Iinclude ${CC_FLAGS} ${CONFIG_FLAGS} -c $< -o $@
 
 %: %.o
 	

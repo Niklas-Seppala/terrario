@@ -17,7 +17,8 @@
 // Definition of invalid count. Eg. when some function
 // Should return count of something, checking INVALID_COUNT
 // should be done.
-#define INVALID_COUNT (-1)
+#define TR_INVALID_COUNT (-1)
+#define TR_INVALID_INDEX (-1)
 
 
 // Prints error with information where it happened.
@@ -52,7 +53,7 @@
     // flags.
     #define NOT_NULL(ptr) \
     { \
-        if ((void*)ptr == NULL)  \
+        if (ptr == NULL) \
         { \
             PRINTF_ERROR("%s", __func__, __FILE__, __LINE__, "Null Assertion Error: " #ptr); \
             DIE_ON_NULL(); \

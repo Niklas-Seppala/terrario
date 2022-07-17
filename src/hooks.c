@@ -100,7 +100,7 @@ int hook_active_count_at(TR_GameState state)
     default:
         PRINTF_ERROR("Unknown game state when querying hook count: 0x%x",
                      state);
-        return INVALID_COUNT;
+        return TR_INVALID_COUNT;
     }
 }
 

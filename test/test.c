@@ -1,5 +1,8 @@
 #include "test.h"
 #include "test_hooks.h"
+#include "test_input.h"
+#include "test_algorithm.h"
+
 #include "../include/debug/log.h"
 
 #define SUCCESS_DIVIDER TERM_GRN "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n" COLOR_RESET
@@ -23,8 +26,11 @@ int main(void)
 
     // LOAD HOOK TESTS
     test_hooks_load_cases(suite);
+    test_input_load_cases(suite);
+    test_linked_list_load_cases(suite);
 
     SRunner *runner = srunner_create(suite);
+
 
     srunner_run_all(runner, CK_NORMAL);
     fail_count = srunner_ntests_failed(runner);
@@ -32,12 +38,10 @@ int main(void)
     srunner_free(runner);
 
     const int success = fail_count == 0;
-    char *icon = success ? "👌" : "👎";
     const char *DIVIDER = success ? SUCCESS_DIVIDER : FAILURE_DIVIDER;
 
     printf("\n%s", DIVIDER);
-    printf("    %s %.1f%%    🧪 TOTAL RUN: %d    ✅ PASSED: %d    ❌ FAILED: %d\n",
-           icon,
+    printf("    %.1f%%    🧪 TOTAL RUN: %d    ✅ PASSED: %d    ❌ FAILED: %d\n",
            (double)total_count / (double)(total_count - fail_count) * 100.0,
            total_count, 
            total_count - fail_count, fail_count);
