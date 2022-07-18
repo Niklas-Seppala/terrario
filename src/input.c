@@ -16,7 +16,7 @@ struct player_input
     bool jump;
 };
 
-TR_PlayerInput TR_input_create(void)
+TR_PlayerInput TR_input_alloc(void)
 {
     TR_PlayerInput input = malloc(sizeof(struct player_input));
     NOT_NULL(input);
@@ -24,7 +24,7 @@ TR_PlayerInput TR_input_create(void)
     return input;
 }
 
-void TR_input_release(TR_PlayerInput input)
+void TR_input_free(TR_PlayerInput input)
 {
     NOT_NULL(input);
     free(input);
@@ -67,7 +67,7 @@ void TR_input_read(TR_PlayerInput input)
 
 }
 
-inline TR_DIR TR_input_get_player_dir(TR_PlayerInput input)
+inline TR_DIR TR_input_get_player_direction(TR_PlayerInput input)
 {
     NOT_NULL(input);
     return input->direction;
