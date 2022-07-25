@@ -63,7 +63,8 @@ void TR_input_read(TR_PlayerInput input)
     input->mouse.click = IsMouseButtonPressed(TR_KEY_MOUSE_ACTION_1);
     input->mouse.down  = IsMouseButtonDown(TR_KEY_MOUSE_ACTION_1);
     input->mouse.world_position = GetMousePosition();
-    // TODO: Screen position.
+    // TODO: position related to screen, needs camera module.
+    input->mouse.screen_position = (Vector2) { 0 };
 
     input->jump = IsKeyDown(TR_KEY_JUMP);
 
