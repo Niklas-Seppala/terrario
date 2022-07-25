@@ -15,6 +15,9 @@ DEBUG=-g -DDEBUG
 
 ##################### TEST ####################
 TEST_CONFIGS=-DHOOKS_SC=2 -DHOOKS_CG=2
+ifdef WINDOW
+TEST_CONFIGS:=-DTESTS_W_WINDOW
+endif
 ################################################
 
 CC_WARN=-Wall -Wshadow -Werror -Wextra -Wformat=2 -Wpedantic -fmax-errors=1 -Wno-unknown-pragmas -Wno-unused-function -Wno-unused-parameter

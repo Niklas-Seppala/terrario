@@ -5,17 +5,6 @@
 #include "gamesuite.h"
 #include "terrario.h"
 
-START_TEST(test_close)
-{
-    GAMESUITE_START("test_close")
-
-    sleep(1);
-    SIMULATE_KEY_PRESS("Escape")
-
-    GAMESUITE_END
-}
-END_TEST
-
 START_TEST(test_move_up)
 {
     int current_frame = 0;
@@ -130,9 +119,11 @@ END_TEST
 
 void test_input_load_cases(Suite *suite)
 {
-    test_add_case(suite, test_close);
+    // Window tests
+    #ifdef TESTS_W_WINDOW
     test_add_case(suite, test_move_up);
     test_add_case(suite, test_move_down);
     test_add_case(suite, test_move_right);
     test_add_case(suite, test_move_left);
+    #endif
 }

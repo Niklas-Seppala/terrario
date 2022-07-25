@@ -24,10 +24,13 @@ int main(void)
 
     Suite *suite = suite_create("Terrario");
 
-    // LOAD HOOK TESTS
-    test_hooks_load_cases(suite);
-    test_input_load_cases(suite);
-    test_linked_list_load_cases(suite);
+    // Load test which don't utilize gamesuite.
+    #ifndef TESTS_W_WINDOW
+        test_hooks_load_cases(suite);
+        test_linked_list_load_cases(suite);
+    #else
+        test_input_load_cases(suite);
+    #endif
 
     SRunner *runner = srunner_create(suite);
 
