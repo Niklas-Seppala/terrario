@@ -16,9 +16,7 @@
 #if !defined(GUARD_LOGGER_H)
 #define GUARD_LOGGER_H
 #include <stdarg.h>
-#include <raylib.h>
 
-#include "debug/log.h"
 #include "terminal.h"
 #include "terrario.h"
 #include "terrario/error.h"

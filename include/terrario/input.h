@@ -16,6 +16,8 @@
 #if !defined(GUARD_INPUT_H)
 #define GUARD_INPUT_H
 #include <stdbool.h>
+#include <raylib.h>
+#include "terrario.h"
 
 /**
  * @brief Opaque pointer to struct player_input, that
@@ -49,7 +51,7 @@ TR_PlayerInput TR_input_alloc(void);
  * 
  * @param input Player's input data for each frame.
  */
-void TR_input_free(TR_PlayerInput input);
+void TR_input_free(TR_PlayerInput *input);
 
 /**
  * @brief Read player's inputs for current frame.
@@ -64,7 +66,7 @@ void TR_input_read(TR_PlayerInput input);
  * @param input Player's input data for each frame.
  * @return TR_DIR 
  */
-TR_DIR TR_input_get_player_direction(TR_PlayerInput input);
+TR_Direction TR_input_get_player_dir(TR_PlayerInput input);
 
 /**
  * @brief Access player's jump state.
@@ -90,5 +92,17 @@ TR_PlayerMouse TR_input_get_player_mouse(TR_PlayerInput input);
  * @return Vector2 
  */
 Vector2 TR_input_get_player_movement(TR_PlayerInput input);
+
+#ifdef DEBUG
+#include <stdio.h>
+#define INPUT_STR_LEN 256
+/**
+ * @brief 
+ * 
+ * @param input 
+ * @param buffer 
+ */
+char *TR_input_str(TR_PlayerInput input, char *buffer);
+#endif
 
 #endif // GUARD_INPUT_H

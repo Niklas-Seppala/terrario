@@ -7,8 +7,6 @@
  * @brief General project wide definitions.
  */
 
-#include <raylib.h>
-
 #if !defined(GUARD_TERRARIO_H)
 #define GUARD_TERRARIO_H
 
@@ -61,6 +59,6 @@ typedef enum directions {
     TR_RIGHT        = 0x2,
     TR_DOWN         = 0x4,
     TR_LEFT         = 0x8
-} TR_DIR;
+} TR_Direction;
 
 #endif // GUARD_TERRARIO_H

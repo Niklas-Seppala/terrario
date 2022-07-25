@@ -1,7 +1,7 @@
 #if !defined(GUARD_TEST_H)
 #define GUARD_TEST_H
 
-#include <raylib.h>
+// #include <raylib.h>
 #include <check.h>
 #include <stdlib.h>
 #include <stdio.h>
