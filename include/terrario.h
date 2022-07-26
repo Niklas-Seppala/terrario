@@ -38,7 +38,7 @@
 // ------------------------------------------------
 
 // Empty macro implementation.
-#define UNDEFINED_MACRO
+#define UNDEFINED_MACRO 
 
 // Stringify variable
 #define STRINGIFY(x) STRINGIFY_(x)

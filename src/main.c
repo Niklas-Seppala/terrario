@@ -10,23 +10,16 @@
 #include "terrario/hooks.h"
 #include "terrario/input.h"
 
+#include "debug/gameconsole.h"
+
 #define thread_local __thread
 
 int main(void)
 {
     log_setup();
 
-    TR_ArrayList list = TR_array_list_alloc();
-
-    int a, b;
-    a = 1;
-    b = 2;
-    TR_array_list_append(list, &a);
-    TR_array_list_append(list, &b);
-
-    printf("%d\n", *((int*)TR_array_list_get(list, 1)));
-
-    TR_array_list_remove(NULL, 1);
+    TR_gconsole_init();
+    TR_gconsole_teardown();
 
     // InitWindow(SCREEN_START_WIDTH, SCREEN_START_HEIGHT, GAME_NAME);
     // SetTargetFPS(TARGET_FPS);

@@ -19,9 +19,11 @@ DEBUG=-g -DDEBUG
 LOG_CONF=${LOG_PERSIST} ${LOG_FILE} ${LOG_EXT_TERMINAL}
 ################################################
 
-RT_NULL_CHECKS = -DRT_NULL_CHECKS -DRT_NULL_KILLS
-CC_WARN=-Wall -Wshadow -Werror -Wextra -Wformat=2 -Wpedantic -fmax-errors=2 -Wno-unknown-pragmas
-CC_FLAGS=${CC_WARN} -O0 -std=c99 ${DEBUG} ${RT_NULL_CHECKS} ${LOG_CONF}
+GAME_CONSOLE_MMAP=-DTR_GC_SHARED_BUFFER=0 -DTR_GC_FBACKED_BUFFER=0
+
+RT_NULL_CHECKS=-DRT_NULL_CHECKS -DRT_NULL_KILLS ${GAME_CONSOLE_MMAP}
+CC_WARN=-Wall -Wshadow -Werror -Wextra -Wformat=2 -Wpedantic -fmax-errors=4 -Wno-unknown-pragmas
+CC_FLAGS=${CC_WARN} -O0 -std=gnu99 ${DEBUG} ${RT_NULL_CHECKS} ${LOG_CONF}
 PROJECT_NAME=Terrario
 BUILD=0.0.1
 EXE_NAME=${PROJECT_NAME}-${BUILD}
